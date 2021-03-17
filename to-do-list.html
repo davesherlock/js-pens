@@ -1,0 +1,104 @@
+<style>
+    .task-done {
+        color: green;
+    }
+
+    .task-not-done {}
+
+    .task {
+        cursor: pointer;
+    }
+</style>
+<div id="tasks">tasks will load here</div>
+<form ref="form" className="form-inline">
+    <input type="text" id="newTask" ref="itemName" className="form-control" placeholder="add a new todo..." />
+    <button type="button" id="addBtn" className="btn btn-default">Add</button>
+</form>
+<script>
+    let ToDoClass = class {
+        constructor(todoItems) {
+            this.todoItems = todoItems;
+        }
+
+        /**
+         * Load the Tasks
+         */
+        loadTasks() {
+            const tasks = document.querySelector("#tasks");
+
+            let content = "<ul>";
+            let count = 0;
+            for (var key of Object.keys(this.todoItems)) {
+                let task_class = this.todoItems[key].done ? "task-done" : "task-not-done";
+
+                content +=
+                    '<li data-index="' +
+                    count +
+                    '" data-state="' +
+                    this.todoItems[key].done +
+                    '" class="task ' +
+                    task_class +
+                    '" >' +
+                    this.todoItems[key].index +
+                    "  " +
+                    this.todoItems[key].value +
+                    " " +
+                    this.todoItems[key].done +
+                    " " +
+                    "</li>";
+
+                count++;
+            }
+            content += "</ul>";
+
+
+            tasks.innerHTML = content;
+        }
+
+        /**
+         * Add a New Task
+         */
+        addTask(e) {
+            let newTask = document.querySelector("#newTask");
+
+            this.todoItems.push({
+                index: this.todoItems.length + 1,
+                value: newTask.value,
+                done: false
+            });
+
+            this.loadTasks();
+        }
+
+        /**
+        * Reverse the done state
+        */
+        changeState(e) {
+            this.todoItems[e.target.dataset.index].done = !this.todoItems[e.target.dataset.index].done;
+            this.loadTasks();
+        }
+    };
+
+    const tasks = [
+        { index: 1, value: "learn react", done: false },
+        { index: 2, value: "Go shopping", done: true },
+        { index: 3, value: "buy flowers", done: true }
+    ];
+
+    const todo = new ToDoClass(tasks);
+    todo.loadTasks();
+
+    const addBtn = document.querySelector("#addBtn");
+
+    addBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        todo.addTask(event);
+    });
+
+    document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("task")) {
+            todo.changeState(e);
+        }
+    });
+
+</script>
