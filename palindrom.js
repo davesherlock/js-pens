@@ -1,12 +1,8 @@
 const palindrome = function (str) {
-    //convert to lower case
-    //split characters out to an array
-    //reverse array
-    //convert back to string with join method
-    //then compare the original string with the 'reversed' string and retun true/false
-
+    //turn the string to lower case
     str = str.toLowerCase();
 
+    //reverse the string and return the result of the comparison
     return str === str.split("").reverse().join("");
 };
 
